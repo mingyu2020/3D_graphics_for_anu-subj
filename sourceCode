@@ -5,29 +5,34 @@ let h = 1000;
 
 let flying = 0;
 
-let terrain = []; 
-let img,img2,img3;
+let terrain = [];
+
+let img, img2,img3;
 function preload() {
-  img = loadImage("https://media.istockphoto.com/id/508544168/photo/clear-blue-sky-background.jpg?b=1&s=170667a&w=0&k=20&c=rzsADNkqiN0SxgvaUXXKjxF-FeBDqs1-gV0jCdUZ8o4=");
+  img = loadImage("https://media.istockphoto.com/id/926306716/photo/stormy-sky-and-rain-apocalypse-like.jpg?b=1&s=170667a&w=0&k=20&c=6hat3RKtB9D8gJuTLu7A4PM0sv01hDfG7Mli-vHTE5Y=");
+  //img = loadImage("https://media.istockphoto.com/id/508544168/photo/clear-blue-sky-background.jpg?b=1&s=170667a&w=0&k=20&c=rzsADNkqiN0SxgvaUXXKjxF-FeBDqs1-gV0jCdUZ8o4=");
   img2 = loadImage("https://images.unsplash.com/photo-1576092762791-dd9e2220abd1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8d29vZCUyMHRleHR1cmV8ZW58MHx8MHx8&w=1000&q=80");
   img3 = loadImage("https://images.unsplash.com/photo-1610824224972-db9878a2fe2c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8d29vZCUyMHRleHR1cmV8ZW58MHx8MHx8&w=1000&q=80");
 }
+
+let raindrops = [];
+
 function setup() {
   createCanvas(800, 600, WEBGL);
   cols = w / scl;
   rows = h / scl;
   noStroke();
+
   for (var x = 0; x < cols; x++) {
     terrain[x] = [];
     for (var y = 0; y < rows; y++) {
-      terrain[x][y] = 0; 
+      terrain[x][y] = 0;
     }
   }
 }
 
 function draw() {
- 
-  flying -= 0.1;
+  flying -= 0.08;
   let yoff = flying;
   for (var y = 0; y < rows; y++) {
     let xoff = 0;
@@ -38,8 +43,7 @@ function draw() {
     yoff += 0.2;
   }
 
-   
-  background(159,252,253);
+  background(159, 252, 253);
   translate(0, 50);
   rotateX(PI / 3);
   fill(200, 200, 200, 150);
@@ -48,59 +52,122 @@ function draw() {
     beginShape(TRIANGLE_STRIP);
     for (var x = 0; x < cols; x++) {
       let v = terrain[x][y];
-      fill(v-32, v+64, v+230);
+      fill(v - 32, v + 64, v + 150);
       vertex(x * scl, y * scl, terrain[x][y]);
       vertex(x * scl, (y + 1) * scl, terrain[x][y + 1]);
     }
     endShape();
   }
- 
-  /*밑부분 정육면체*/
-  push();
-  translate(w/2,h/2);
-  translate(mouseX - width/2, (mouseY - height/2)*6);
-  texture(img3);
-  box(110, 200, 90);
-  pop();
- 
-  /* 원기둥 */
-  push();
-  translate(w/2,h/2,100);
-  translate(mouseX - width/2, (mouseY - height/2)*6);
-  texture(img2);
-  rotateX(HALF_PI); // x축을 기준으로 90도 회전
-  cylinder(10,100);
-  pop();
-  /*흰색 정육면체 윗부분*/
-  push();
-  translate(w/2,h/2.09,130);
-  translate(mouseX - width/2, (mouseY - height/2)*6);
-  ambientLight(255);
-  ambientMaterial(255);
-  rotateX(100);
-  box(100, 2, 40);
-  pop();
- /*흰색 정육면체 아랫부분*/
-  push();
-  translate(w/2,h/2.09,89);
-  translate(mouseX - width/2, (mouseY - height/2)*6);
-  ambientLight(255);
-  ambientMaterial(255);
-  rotateX(60);
-  box(100, 2, 50);
-  pop();
-  /*뒷 부분 정육면체*/
-  push();
-  translate(w/2,h/1.7,64);
-  translate(mouseX - width/2, (mouseY - height/2)*6);
-  texture(img3);
-  box(110,60, 65);
-  pop(); 
-  /*하늘*/
+  //하늘
   push();
   translate(600,-900,100);
   rotateY(7.85);
   texture(img);
   box(500,1600);
   pop();
+  
+  //물체를 만들기 위한 도형들
+  
+  //메인
+  push();
+  translate(w/2,h/2);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  texture(img3);
+  box(95, 150, 70);
+  pop();
+  //왼쪽 판
+  push();
+  translate(w/2.13,h/2);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  texture(img3);
+  box(15, 150, 130);
+  pop();
+  //오른쪽 판
+  push();
+  translate(w/1.89,h/2);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  texture(img3);
+  box(15, 150, 130);
+  pop();
+  //뒷 판
+  push();
+  translate(w/2.009,h/1.74,20);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  texture(img3);
+  rotateZ(PI/2);
+  box(6, 90, 90);
+  pop();
+  //앞 판
+  push();
+  translate(w/2.009,h/2.35,20);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  texture(img3);
+  rotateZ(PI/2);
+  box(6, 90, 90);
+  pop();
+  
+  
+  
+  push();
+  translate(w/2,h/2,100);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  texture(img2);
+  rotateX(HALF_PI);
+  cylinder(6,100);
+  pop();
+  
+  push();
+  translate(w/2,h/2.09,130);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  fill(200);
+  rotateX(100);
+  box(100, 2, 40);
+  pop();
+  
+  push();
+  translate(w/2,h/2.09,89);
+  translate(mouseX - width/2, (mouseY - height/2)*6);
+  fill(220);
+  rotateX(60);
+  box(100, 2, 50);
+  pop();
+  
+  // ChatGPT를 이용해서 만든 raindrops
+  for (let i = 0; i < 4; i++) {
+    raindrops.push(new Raindrop());
+  }
+  // Move and draw raindrops
+  for (let i = raindrops.length - 1; i >= 0; i--) {
+    let rd = raindrops[i];
+    rd.move();
+    rd.show();
+    // Remove raindrop if it goes out of bounds
+    if (rd.y > height) {
+      raindrops.splice(i, 1);
+    }
+  }
+}
+
+class Raindrop {
+  constructor() {
+    this.x = random(width);
+    this.y = random(-100, -50);
+    this.z = random(20, 250);
+    this.speed = map(this.z, 20, 50, 5, 10);
+  }
+
+  move() {
+    this.y += this.speed;
+  }
+
+  show() {
+    push();
+    translate(this.x+250, this.y+150, this.z);
+    rotateX(HALF_PI);
+    fill(200);
+    plane(1, 20);
+    pop();
+ 
+  }
+  
 }
